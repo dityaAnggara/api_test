@@ -31,9 +31,6 @@ class Login extends ResourceController
         $verify = password_verify($this->request->getVar('password'), $user['password']);
         if(!$verify) return $this->fail('Wrong Password');
  
-        
-        //$model = new UserModel();
-        //$data = $model->find(['email' => $id]);
         $startTime = date("Y-m-d H:i:s");
         $cenvertedTime = date('Y-m-d H:i:s',strtotime('+2 hour',strtotime($startTime)));
         $key = getenv('TOKEN_K');
@@ -41,13 +38,17 @@ class Login extends ResourceController
         $payload = array(
             "uid" => $user['id'],
             "email" => $user['email'],
-            "expired" => $cenvertedTime
+            "expired" => $cenvertedTime,
+            "status" => "akses"
+
         );
         
         $payloadn = array(
             "uid" => $user['id'],
             "email" => $user['email'],
-            "ref" => $startTime
+            "ref" => $startTime,
+            "status" => "segar"
+
         );
         
        

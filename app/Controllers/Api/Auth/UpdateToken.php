@@ -33,7 +33,49 @@ class UpdateToken extends ResourceController
             $user = $model->where("email", $decoded->email)->first();
             $da = date('Y-m-d H:i:s');
             if(($da > $user['expi']) == true) return $this->fail('token anda expired, login sekali lagi untuk mendapatkan token');
-            //return $this->respond($user);
+            if($decoded->status != "segar") return $this->fail('gunakan refresh token');
+            $startTime = date("Y-m-d H:i:s");
+        $cenvertedTime = date('Y-m-d H:i:s',strtotime('+2 hour',strtotime($startTime)));
+        $key = getenv('TOKEN_K');
+        
+        $payload = array(
+            "uid" => $user['id'],
+            "email" => $user['email'],
+            "expired" => $cenvertedTime,
+            "status" => "akses"
+
+        );
+        
+        $payloadn = array(
+            "uid" => $user['id'],
+            "email" => $user['email'],
+            "ref" => $startTime,
+            "status" => "segar"
+
+        );
+        
+       
+            $token = JWT::encode($payload, $key, 'HS256');
+            $tokenn = JWT::encode($payloadn, $key, 'HS256');
+            $response = [
+                'accessToken' => $token,
+                'refreshToken' => $tokenn,
+                'info' => [
+                    '1 .' => 'Anda mendapatkan access token dan refresh token',
+                    '2 .' => 'batas waktu access  token dan refresh token hanya berlaku 2 jam setelah token terbentuk',
+                    '3 .' => 'gunakan access token untuk bertransaksi dalam system dan refresh token untuk mengganti access token anda',
+                    '4 .' => 'jika access token sudah tidak berlaku anda harus login untuk mendapatkan access token kembali bukan dengan update token'
+                ]
+                
+            ];
+            $dataa = [
+                'acces_t' => $tokenn,
+                'expi' => $cenvertedTime
+            ];
+           
+            $model->update($user['id'], $dataa);
+            return $this->respond($response);
+            
         } catch (\Throwable $th) {
             return Services::response()
                             ->setJSON(['msg' => 'Invalid Token'])

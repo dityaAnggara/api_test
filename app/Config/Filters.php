@@ -8,6 +8,7 @@ use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\Auth;
 
 class Filters extends BaseConfig
 {
@@ -20,9 +21,9 @@ class Filters extends BaseConfig
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
-        'auth'          => App\Filters\Auth::class,
-        'cors'          => App\Filters\Cors::class,
         'secureheaders' => SecureHeaders::class,
+        'auth'          => Auth::class,
+       
     ];
 
     /**
