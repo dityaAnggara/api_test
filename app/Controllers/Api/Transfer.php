@@ -59,7 +59,7 @@ class Transfer extends ResourceController
             $nmodel = new TransaksiTransfer();
             $dtng = date("Y");
             $trt = $nmodel->like('tanggal_transaksi', $dtng,'after')->get();
-            $idtrt = "TF".date("ymd")."".sprintf("%04d", ($trt->getNumRows()+1));
+            $idtrt = "TF".date("ymd")."".sprintf("%05d", ($trt->getNumRows()+1));
             $response = [
               "id_transaksi" => $idtrt,
               "nilai_transfer" => $this->request->getVar("nilai_transfer"),
